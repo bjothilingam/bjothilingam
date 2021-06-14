@@ -4,9 +4,7 @@ import guru.springframework.msscbrewery.services.CustomerService;
 import guru.springframework.msscbrewery.web.model.CustomerDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -20,8 +18,25 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @RequestMapping("/{customerId}")
+    @GetMapping("/{customerId}")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable("customerId") UUID customerId){
         return new ResponseEntity<>(customerService.getCustomerById(customerId), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
+        return new ResponseEntity<>(customerService.createCustomer(customerDto), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDto customerDto) {
+        customerService.updateCustomer(customerId, customerDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCustomer(@PathVariable("customerId") UUID customerId) {
+        customerService.deleteCustomer(customerId);
     }
 }
