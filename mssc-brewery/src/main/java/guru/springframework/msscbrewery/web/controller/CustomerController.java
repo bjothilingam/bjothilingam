@@ -2,6 +2,7 @@ package guru.springframework.msscbrewery.web.controller;
 
 import guru.springframework.msscbrewery.services.CustomerService;
 import guru.springframework.msscbrewery.web.model.CustomerDto;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,10 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
-        return new ResponseEntity<>(customerService.createCustomer(customerDto), HttpStatus.CREATED);
+        CustomerDto savedDto = customerService.createCustomer(customerDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "api/v1/customer" + savedDto.getId().toString());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PutMapping("/{customerId}")
